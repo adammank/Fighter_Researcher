@@ -1,22 +1,23 @@
 
 ##### search_page.py
-##### This file contains the GUI Search Page window, which
-#####   allows us to find any fighter that we want to and
-#####   look for his specific stats.
+#####   This module contains the GUI Search Page window, which
+##### allows us to find any MMA fighter that we want to,
+##### and to look for his specific stats.
 
 import time
 import random
+
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 from threading import Thread
 from matplotlib import pyplot as plt
 
-from Code_additions import utilities
-from Code_additions import constants_search_page as constants
-from Database.sql_functions import DatabaseManager
-from Database.sql_constants import db_command_conditions_dict
-from Selenium import selenium_functions
+from .utilities import utilities
+from .constants import constants_search_page as constants
+from .constants.constants_db import DB_COMMAND_CONDITIONS_DICT
+from .database.db_functions import DatabaseManager
+from .selenium import selenium_functions
 
 
 class SearchPage(Toplevel):
@@ -33,7 +34,7 @@ class SearchPage(Toplevel):
         )
         self.geometry(f"1500x650+{width}+{height}")
         self.title("Fighter Researcher - Search Page")
-        self.iconbitmap("Static/project_photos/red-fist-icon.ico")
+        self.iconbitmap("app/static/project_photos/red-fist-icon.ico")
         self.resizable(False, False)
 
 
@@ -55,7 +56,7 @@ class SearchPage(Toplevel):
         self.search_box = LabelFrame(
             master=self.left_frame, bg='chocolate',
             font='arial 16 bold', pady=15, width=250,
-            text=constants.left_search_box_title,
+            text=constants.LEFT_SEARCH_BOX_TITLE,
         )
         self.search_box.pack(pady=(30,20))
 
@@ -79,7 +80,7 @@ class SearchPage(Toplevel):
         self.database_box = LabelFrame(
             master=self.left_frame, bg='chocolate',
             font='arial 16 bold', pady=15,
-            text=constants.left_db_box_title,
+            text=constants.LEFT_DB_BOX_TITLE,
         )
         self.database_box.pack()
 
@@ -125,7 +126,7 @@ class SearchPage(Toplevel):
         self.sort_box = LabelFrame(
             master=self.left_frame, bg='chocolate',
             font='arial 16 bold', pady=15,
-            text=constants.left_sort_box_title,
+            text=constants.LEFT_SORT_BOX_TITLE,
         )
         self.sort_box.pack(pady=10)
 
@@ -154,14 +155,14 @@ class SearchPage(Toplevel):
         self.sort_box_button.pack()
 
         ##### ADDING VARIANTS TO VARIANTS LIST
-        for index, variant in enumerate(constants.sort_box_variants):
+        for index, variant in enumerate(constants.SORT_BOX_VARIANTS):
             index += 1
             self.sort_box_variants_list.insert(index, variant)
 
 
     ###############  FIGHTER PHOTO  ###############
         self.fighter_photo = PhotoImage(
-            file=f'Static/project_photos/{random.choice(("paladin", "mage_khajiit"))}.png'
+            file=f'app/static/project_photos/{random.choice(("paladin", "mage_khajiit"))}.png'
         )
         self.fighter_photo_label = Label(
             master=self.right_frame, image=self.fighter_photo
@@ -181,7 +182,7 @@ class SearchPage(Toplevel):
 
     ###############  BACK BUTTON  ###############
         self.back_button_img = PhotoImage(
-            file="Static/project_photos/back_button.png"
+            file="app/static/project_photos/back_button.png"
         )
         self.back_button = Button(
             master=self.right_frame, bg='white',
@@ -198,14 +199,14 @@ class SearchPage(Toplevel):
         for row in range(2):
            for column in range(2):
                setattr(
-                   self, constants.titles[index],
+                   self, constants.TITLES[index],
                    Label(
                        master=self.right_frame, bg='bisque',
-                       text=constants.titles[index],
+                       text=constants.TITLES[index],
                        font='arial 20 bold' if index != 2 else 'arial 18 bold',
                    )
                )
-               getattr(self, constants.titles[index]).place(
+               getattr(self, constants.TITLES[index]).place(
                    x=10+column*590,
                    y=30+row*400
                )
@@ -213,9 +214,9 @@ class SearchPage(Toplevel):
 
 
     ###############  INFO TEXTS  ###############
-        info_text_x_values = iter(constants.info_text_x_values)
-        info_text_y_values = iter(constants.info_text_y_values)
-        for text in constants.info_text_names:
+        info_text_x_values = iter(constants.INFO_TEXT_X_VALUES)
+        info_text_y_values = iter(constants.INFO_TEXT_Y_VALUES)
+        for text in constants.INFO_TEXT_NAMES:
             setattr(
                 self, text,
                 Label(
@@ -230,9 +231,9 @@ class SearchPage(Toplevel):
 
 
     ###############  INFO ENTRIES  ###############
-        info_entry_x_values = iter(constants.info_entry_x_values)
-        info_entry_y_values = iter(constants.info_entry_y_values)
-        for entry_name in constants.info_entry_names:
+        info_entry_x_values = iter(constants.INFO_ENTRY_X_VALUES)
+        info_entry_y_values = iter(constants.INFO_ENTRY_Y_VALUES)
+        for entry_name in constants.INFO_ENTRY_NAMES:
             setattr(
                 self, entry_name,
                 Entry(master=self.right_frame, width=25, font='arial 12 bold')
@@ -244,9 +245,9 @@ class SearchPage(Toplevel):
 
 
     ###############  RIGHT STATISTIC ENTRIES  ###############
-        stat_entry_x_values = iter(constants.stat_entry_x_values)
-        stat_entry_y_values = iter(constants.stat_entry_y_values)
-        for index, entry_name in enumerate(constants.stat_entry_names):
+        stat_entry_x_values = iter(constants.STAT_ENTRY_X_VALUES)
+        stat_entry_y_values = iter(constants.STAT_ENTRY_Y_VALUES)
+        for index, entry_name in enumerate(constants.STAT_ENTRY_NAMES):
             setattr(
                 self, entry_name,
                 Entry(
@@ -275,7 +276,6 @@ class SearchPage(Toplevel):
 
 
     ###############  BAR THEMES  ###############
-        #('winnative', 'clam', 'alt', 'default', 'classic', 'vista', 'xpnative')
         self.ttk_style = ttk.Style()
         self.ttk_style.theme_use('winnative')
         self.ttk_style.configure(
@@ -290,7 +290,7 @@ class SearchPage(Toplevel):
 
     ###############  BARS  ###############
         y=0
-        for bar_name in constants.bar_names:
+        for bar_name in constants.BAR_NAMES:
             if bar_name == 'f_l_ko_bar':
                 y+=29
             setattr(
@@ -362,16 +362,16 @@ class SearchPage(Toplevel):
         """Change Search Page theme based on selected option."""
 
         text_list = [
-            *constants.titles, *constants.info_text_names, 'themes_lbl',
+            *constants.TITLES, *constants.INFO_TEXT_NAMES, 'themes_lbl',
         ]
         entry_list = [
-            *constants.info_entry_names, *constants.stat_entry_names,'f_draws',
+            *constants.INFO_ENTRY_NAMES, *constants.STAT_ENTRY_NAMES,'f_draws',
         ]
         left_boxes = [
             self.search_box, self.database_box, self.sort_box
         ]
 
-        colors_dict = constants.search_colors_dict(self.themes_list.get())
+        colors_dict = utilities.colors_dict(theme=self.themes_list.get(), file='SEARCH_PAGE')
 
         for text in text_list:
             getattr(self, text).configure(
@@ -444,8 +444,7 @@ class SearchPage(Toplevel):
                         message="Due to the site's rights, I cannot share the "
                                 "full searching algorithm. Instead, I encourage "
                                 "You guys to have a look on a video & photos to "
-                                "see how it is working in a real time (Presentation dir)."
-                                "\nHave a nice day!")
+                                "see how it is working in a real time (presentation dir).")
 
 
     def add_fighter(self, fighter_name):
@@ -520,19 +519,19 @@ class SearchPage(Toplevel):
 
         ######### PHOTO & FLAG
         self.fighter_photo.configure(
-            file=f'Static/fighters_photos/{person_in_base}(photo).png'
+            file=f'app/static/fighters_photos/{person_in_base}(photo).png'
         )
         self.fighter_flag.configure(
-            file=f'Static/fighters_photos/{person_in_base}(flag).png'
+            file=f'app/static/fighters_photos/{person_in_base}(flag).png'
         )
 
         ######### INFO & STAT ENTRIES
         entries_name_list = [
-            *constants.info_entry_names,
-            *constants.stat_entry_names,
+            *constants.INFO_ENTRY_NAMES,
+            *constants.STAT_ENTRY_NAMES,
             'f_draws',
         ]
-        entry_abbreviations = iter(constants.entry_abbreviations)
+        entry_abbreviations = iter(constants.ENTRY_ABBREVIATIONS)
         for index, entry_name in enumerate(entries_name_list):
             entry = getattr(self, entry_name)
             entry.configure(state='normal')
@@ -541,7 +540,7 @@ class SearchPage(Toplevel):
 
         ######### BARS
         index = 15
-        for bar_name in constants.bar_names:
+        for bar_name in constants.BAR_NAMES:
             bar = getattr(self, bar_name)
             bar.configure(value=data[index])
             index += 2
@@ -602,7 +601,7 @@ class SearchPage(Toplevel):
                 self.sort_box_variants_list.curselection())
 
             # every option has its db command condition
-            selected_db_command_condition = db_command_conditions_dict[
+            selected_db_command_condition = DB_COMMAND_CONDITIONS_DICT[
                 selected_option
             ]
 
@@ -672,8 +671,8 @@ class SearchPage(Toplevel):
 
 
         ######### create and adjust graph
-        style_based_on_actual_theme = constants.search_colors_dict(
-            self.themes_list.get())['graph']
+        style_based_on_actual_theme = utilities.colors_dict(
+            theme=self.themes_list.get(), file='SEARCH_PAGE')['graph']
         plt.style.use(style_based_on_actual_theme)
 
         plt.figure(figsize=(9, 5))

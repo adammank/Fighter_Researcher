@@ -1,29 +1,28 @@
 
 ##### home_page.py
-#####   This file contains the main GUI page of the project.
+#####   This module contains the main GUI page of the project.
 
 import time
 import datetime
 import multiprocessing
 import os
+
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 
-from search_page import SearchPage
-from compare_page import ComparePage
-from Code_additions import utilities
-from Code_additions import constants_home_page as constants
-from Database.sql_functions import (DatabaseManager,
-                                    multiprocessing_update_fighter)
-
+from .search_page import SearchPage
+from .compare_page import ComparePage
+from .utilities import utilities
+from .constants import constants_home_page as constants
+from .database import db_functions
 
 
 class HomePage:
     def __init__(self, master):
         self.master = master
         self.actual_language = 'eng'
-        self.fighter_url_list = DatabaseManager().return_fighter_urls()
+        self.fighter_url_list = db_functions.DatabaseManager().return_fighter_urls()
         self.amount_of_fighters = len(self.fighter_url_list)
         self.index = 0
         self.counter = None
@@ -31,7 +30,7 @@ class HomePage:
 
     ###############  BACKGROUND IMAGE  ###############
         background_img = PhotoImage(
-            file='Static/project_photos/background_image.png'
+            file='app/static/project_photos/background_image.png'
         )
         self.canvas_background = Canvas(
             master=self.master, width=626, height=915,
@@ -45,10 +44,10 @@ class HomePage:
 
     ###############  LANGUAGE  ###############
         english_flag_icon = PhotoImage(
-            file='Static/project_photos/en_flag.png'
+            file='app/static/project_photos/en_flag.png'
         )
         polish_flag_icon = PhotoImage(
-            file='Static/project_photos/pl_flag.png'
+            file='app/static/project_photos/pl_flag.png'
         )
 
         self.btn_english_version = Button(
@@ -94,7 +93,7 @@ class HomePage:
 
     ###############  BUTTON SEARCH  ###############
         btn_search_image = PhotoImage(
-            file='Static/project_photos/red_fist.png'
+            file='app/static/project_photos/red_fist.png'
         )
         self.btn_search = Button(
             master=self.master, bg='black', fg='white', activebackground='snow',
@@ -108,7 +107,7 @@ class HomePage:
 
     ###############  BUTTON COMPARE  ###############
         btn_compare_image = PhotoImage(
-            file='Static/project_photos/compare_icon.png'
+            file='app/static/project_photos/compare_icon.png'
         )
         self.btn_compare = Button(
             master=self.master, bg='black', fg='white', activebackground='snow',
@@ -121,7 +120,7 @@ class HomePage:
 
 
     ###############  LAST UPDATE NOTE  ###############
-        with open(file="Static/Last_update.txt", mode='r') as f:
+        with open(file="app/static/Last_update.txt", mode='r') as f:
             date_of_last_update = f.readline()
             f.close()
         self.last_update_text = self.canvas_background.create_text(
@@ -134,7 +133,7 @@ class HomePage:
 
     ###############  UPDATE BUTTON  ###############
         btn_update_image = PhotoImage(
-            file="Static/project_photos/update_icon.png"
+            file="app/static/project_photos/update_icon.png"
         )
         self.btn_update = Button(
             master=self.master, bg='black', fg='white', activebackground='snow',
@@ -152,7 +151,6 @@ class HomePage:
             "green.Horizontal.TProgressbar", background='green',
             troughcolor='gray90'
         )
-        # ('winnative', 'clam', 'alt', 'default', 'classic', 'vista', 'xpnative')
 
     ###############  UPDATE BAR & TEXT  ###############
         self.update_process_bar = ttk.Progressbar(
@@ -184,10 +182,10 @@ class HomePage:
         self.actual_language = language
 
         # Set proper data based on choosed language
-        tk_obj_values_dict = constants.eng_tk_obj_values_dict if \
-            language == 'eng' else constants.pl_tk_obj_values_dict
-        canv_obj_values_dict = constants.eng_canv_obj_values_dict if \
-            language == 'eng' else constants.pl_canv_obj_values_dict
+        tk_obj_values_dict = constants.ENG_TK_OBJ_VALUES_DICT if \
+            language == 'eng' else constants.PL_TK_OBJ_VALUES_DICT
+        canv_obj_values_dict = constants.ENG_CANV_OBJ_VALUES_DICT if \
+            language == 'eng' else constants.PL_CANV_OBJ_VALUES_DICT
 
         # Translate Tkinter elements
         for obj in tk_obj_values_dict.items():
@@ -259,7 +257,7 @@ class HomePage:
             )
 
             # save the new date of an update
-            with open(file="Static/last_update.txt", mode='w+') as f:
+            with open(file="app/static/last_update.txt", mode='w+') as f:
                 f.write(self.todays_date)
                 f.close()
 
@@ -273,8 +271,7 @@ class HomePage:
                 message="Due to the site's rights, I cannot share the "
                         "full searching algorithm. Instead, I encourage "
                         "You guys to have a look on a video & photos to "
-                        "see how it is working in a real time (Presentation dir)."
-                        "\nHave a nice day!")
+                        "see how it is working in a real time (presentation dir).")
             self.canvas_background.itemconfigure(
                 tagOrId=self.update_process_text,
                 text=f"{self.amount_of_fighters}/{self.amount_of_fighters}")
@@ -290,7 +287,7 @@ class HomePage:
 
             # we have to spawn a new process, otherwise Tkinter will get a crash
             update_fighter_process = multiprocessing.Process(
-                target=multiprocessing_update_fighter, args=[url])
+                target=db_functions.multiprocessing_update_fighter, args=[url])
 
             # start a process
             update_fighter_process.start()
@@ -336,22 +333,3 @@ class HomePage:
             self.master.after(
                 5000, self.check_process, process
             )
-
-
-
-def base():
-    window = Tk()
-    width, height = utilities.center_window(
-        screen_width=window.winfo_screenwidth(),
-        screen_height=window.winfo_screenheight(),
-        tk_window_width=626, tk_window_height=915,
-    )
-    window.geometry(f"626x900+{width}+{height}")
-    window.title("Fighter Researcher - Home Page")
-    window.iconbitmap("Static/project_photos/red-fist-icon.ico")
-    window.resizable(False, False)
-    HomePage(window)
-
-
-if __name__ == '__main__':
-    base()

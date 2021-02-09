@@ -1,23 +1,24 @@
 
-##### sql_functions.py
-#####   This file contains all used functions cooligated with database in entire project.
+##### db_functions.py
+#####   This file contains all used functions cooligated with database in the entire project.
 
 import os
 import random
 from sqlite3 import *
-from .sql_constants import *
-from Selenium.selenium_functions import run_driver, grab_fighter_info
+from ..constants import constants_db as constants
+from ..utilities import utilities
+from ..selenium.selenium_functions import run_driver, grab_fighter_info
 
 
 class DatabaseManager:
     def __init__(self):
         self.connection = connect(
-            "Database/fighters_database.db")
+            "app/database/fighters_database.db")
 
     ###### OPENING / CLOSING METHODS
     def create_main_db_table(self):
         return self.connection.cursor().execute(
-            db_command_create_table)
+            constants.DB_COMMAND_CREATE_TABLE)
 
     def close_connection_with_db(self):
         return self.connection.close()
@@ -74,7 +75,7 @@ class DatabaseManager:
         """Update certain row (fighter's stats) in fighters table."""
 
         self.connection.cursor().execute(
-            db_command_update_fighter_stats(
+            utilities.db_command_update_fighter_stats(
                 fighter_stat_list=fighter_stat_list
             ))
         self.connection.commit()
@@ -84,7 +85,7 @@ class DatabaseManager:
         """Create fighter's career history table."""
 
         self.connection.cursor().execute(
-            db_command_create_fighter_career_history_table(
+            utilities.db_command_create_fighter_career_history_table(
                 table_name=table_name
             ))
         self.connection.commit()
@@ -96,7 +97,7 @@ class DatabaseManager:
         for index, fight in enumerate(fighter_career_history):
             index+=1
             self.connection.cursor().execute(
-                db_command_add_career_history_fight(
+                utilities.db_command_add_career_history_fight(
                     table_name=table_name, fight=fight, index=index
                 ))
             self.connection.commit()
@@ -114,7 +115,7 @@ class DatabaseManager:
         """Return certain fighter list based on selected option."""
 
         # construct entire db condition
-        db_full_command = f"{db_command_preface} {condition}"
+        db_full_command = f"{constants.DB_COMMAND_PREFACE} {condition}"
 
         # grab from db proper data
         fighters_list = self.connection.cursor().execute(db_full_command).fetchall()
@@ -136,7 +137,7 @@ class DatabaseManager:
 
         try:
             fighter_list = self.connection.cursor().execute(
-                db_command_preface).fetchall()
+                constants.DB_COMMAND_PREFACE).fetchall()
         except OperationalError:
             print('No such table')
             fighter_list = []
@@ -168,7 +169,7 @@ class DatabaseManager:
         """Return fighter stats in order to display them in the compare_page.py."""
 
         return self.connection.cursor().execute(
-            db_command_return_fighter_stats_for_comparing(
+            utilities.db_command_return_fighter_stats_for_comparing(
                 fighter_name)).fetchone()
 
 
@@ -177,7 +178,7 @@ class DatabaseManager:
         a compare graph in the compare_page.py"""
 
         return self.connection.cursor().execute(
-            db_command_return_fighter_stats_for_comparing_graph(
+            utilities.db_command_return_fighter_stats_for_comparing_graph(
                 fighter_name)).fetchone()
 
 

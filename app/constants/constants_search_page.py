@@ -1,17 +1,17 @@
 #################################################################
-titles = [
+TITLES = [
     "*** GENERAL INFO ***",
     "*** STATS ***",
     "*** Upcoming Fights ***",
     "*** Career History ***",
 ]
 
-left_search_box_title = "---------------- Search Fighter ----------------"
-left_db_box_title = "-------------------- Database --------------------"
-left_sort_box_title = "-------------------- Sort by -----------------------"
+LEFT_SEARCH_BOX_TITLE = "---------------- Search Fighter ----------------"
+LEFT_DB_BOX_TITLE = "-------------------- Database --------------------"
+LEFT_SORT_BOX_TITLE = "-------------------- Sort by -----------------------"
 
 #################################################################
-info_text_names = [
+INFO_TEXT_NAMES = [
     '\tName: ', '\t Alias: ', f"{8*' '}Nationality: ",
     f"{12*' '}Affilation: ", f"{16*' '}Height: ", f"{15*' '}Weight: ",
     f"{21*' '}Age: ", f"{19*' '}Born: ", f"{5*' '}Recent fight: ",
@@ -21,63 +21,63 @@ info_text_names = [
     'By KO/TKO: ', 'By SUB: ', 'By DEC: ',
     'BY KO/TKO: ', 'BY SUB: ', 'BY DEC: ',
 ]
-info_text_x_values = [
+INFO_TEXT_X_VALUES = [
     10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 600, 600,
     600, 600, 600, 600, 635, 635, 635, 635, 635, 635
 ]
-info_text_y_values = [
+INFO_TEXT_Y_VALUES = [
     76, 103, 130, 157, 184, 211, 238, 265, 292, 319, 346, 73,
     100, 127, 154, 246, 348, 177, 199, 221, 271, 293, 315
 ]
 
 #################################################################
-info_entry_names = [
+INFO_ENTRY_NAMES = [
     'f_name', 'f_alias', 'f_nationality', 'f_affilation',
     'f_height', 'f_weight', 'f_age', 'f_born', 'f_recent',
     'f_first', 'f_age2', 'f_fights', 'f_mma_record', 'f_streak',
 ]
-info_entry_x_values = (
+INFO_ENTRY_X_VALUES = (
     145, 145, 145, 145, 145, 145, 145,
     145, 145, 145, 145, 815, 815, 815,
 )
-info_entry_y_values = (
+INFO_ENTRY_Y_VALUES = (
     78, 105, 132, 159, 186, 213, 240,
     267, 294, 321, 348, 78, 105, 132
 )
 
 #################################################################
-stat_entry_names = [
+STAT_ENTRY_NAMES = [
     'f_w_ko', 'f_w_ko_perc', 'f_w_sub',
     'f_w_sub_perc', 'f_w_dec', 'f_w_dec_perc',
     'f_l_ko', 'f_l_ko_perc', 'f_l_sub',
     'f_l_sub_perc', 'f_l_dec', 'f_l_dec_perc'
 ]
-stat_entry_x_values = (
+STAT_ENTRY_X_VALUES = (
     815, 1005, 815, 1005, 815, 1005,
     815, 1005, 815, 1005, 815, 1005,
 )
-stat_entry_y_values = (
+STAT_ENTRY_Y_VALUES = (
     177, 177, 199, 199, 221, 221,
     273, 273, 295, 295, 317, 317
 )
-entry_abbreviations = (
+ENTRY_ABBREVIATIONS = (
     '', '', '', '', ' CM', ' KG', ' years', '', '', '', ' years',
     '', '', '', '', '%', '', '%', '', '%', '', '%', '', '%', '', '%', '',
 )
 
 #################################################################
-bar_names = [
+BAR_NAMES = [
     'f_w_ko_bar', 'f_w_sub_bar', 'f_w_dec_bar',
     'f_l_ko_bar', 'f_l_sub_bar', 'f_l_dec_bar'
 ]
 
-stat_perc_entry_names = [
+STAT_PERC_ENTRY_NAMES = [
     'f_w_ko_perc', 'f_w_sub_perc', 'f_w_dec_perc',
     'f_l_ko_perc', 'f_l_sub_perc',  'f_l_dec_perc'
 ]
 
 #################################################################
-sort_box_variants = [
+SORT_BOX_VARIANTS = [
     f"{28*'*'}  AGE  {28*'*'}",
     "AGE:    Young-old", "AGE:    Old-young",
     "AGE:    <=20", "AGE:    20-30", "AGE:    30-40", "AGE:    40+",
@@ -109,44 +109,3 @@ sort_box_variants = [
     "NAT:    Poland", "NAT:    USA", "NAT:    Brazil",
     "NAT:    France", "NAT:    England", "NAT:    Russia",
 ]
-
-#################################################################
-def search_colors_dict(theme):
-    """Returns dictionary containing objects as keys and
-        their colors as values based on passed argument."""
-
-    if theme == 'Default':
-        colors_list = [
-            'bisque', 'black', 'white',
-            'black', 'bisque', 'chocolate',
-            'seaborn-darkgrid',
-        ]
-    elif theme == 'Dracula':
-        colors_list = [
-            'black', 'white', 'black',
-            'white', 'black', 'black',
-            'Solarize_Light2',
-        ]
-    elif theme == 'Navy':
-        colors_list = [
-            'midnightblue', 'yellow', 'darkslategray',
-            'yellow', 'midnightblue', 'darkslategray',
-            'dark_background',
-        ]
-    elif theme == 'Dark grey':
-        colors_list = [
-            'darkslategray', 'deepskyblue', 'bisque4',
-            'lawn green', 'darkslategray', 'darkolivegreen',
-            'grayscale',
-        ]
-
-    objects_parts = [
-        'lbl_bg_color', 'lbl_fg_color',
-        'entry_bg_color', 'entry_fg_color',
-        'right_frame', 'left_frame',
-        'graph',
-    ]
-
-    return {
-        obj_part: color for obj_part, color in zip(objects_parts, colors_list)
-    }

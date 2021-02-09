@@ -1,18 +1,19 @@
 
 ##### compare_page.py
-##### This module contains the GUI Compare Page window, which allows us to
-#####      compare any two available in database fighters.
+#####   This module contains the GUI Compare Page window,
+##### which allows us to compare any two available in the database fighters.
 
 import numpy as np
+
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 from matplotlib import pyplot as plt
 
-from Code_additions import utilities
-from Code_additions import constants_compare_page as constants
-from Database.sql_functions import DatabaseManager
-from Database.sql_constants import db_command_conditions_dict
+from .utilities import utilities
+from .constants import constants_compare_page as constants
+from .constants.constants_db import DB_COMMAND_CONDITIONS_DICT
+from .database.db_functions import DatabaseManager
 
 
 class ComparePage(Toplevel):
@@ -29,7 +30,7 @@ class ComparePage(Toplevel):
         )
         self.geometry(f"1500x700+{width}+{height}")
         self.title("Fighter Researcher - Compare Page")
-        self.iconbitmap("Static/project_photos/red-fist-icon.ico")
+        self.iconbitmap("app/static/project_photos/red-fist-icon.ico")
         self.resizable(False, False)
 
 
@@ -49,7 +50,7 @@ class ComparePage(Toplevel):
         self.database_box = LabelFrame(
             master=self.right_frame, bg='chocolate',
             font='arial 16 bold', pady=15,
-            text=constants.right_db_box_title,
+            text=constants.RIGHT_DB_BOX_TITLE,
         )
         self.database_box.pack(pady=(60, 0))
 
@@ -98,7 +99,7 @@ class ComparePage(Toplevel):
         self.second_fighter_choose_btn.grid(row=3, pady=(15, 0))
 
         ###### ENTRIES
-        for entry_name in constants.right_fighter_name_entries:
+        for entry_name in constants.RIGHT_FIGHTER_NAME_ENTRIES:
             setattr(
                 self, entry_name,
                 Entry(
@@ -114,7 +115,7 @@ class ComparePage(Toplevel):
         self.sort_box = LabelFrame(
             master=self.right_frame, bg='chocolate',
             font='arial 16 bold', pady=15,
-            text=constants.right_sort_box_title,
+            text=constants.RIGHT_SORT_BOX_TITLE,
         )
         self.sort_box.pack(pady=(30, 0))
 
@@ -142,14 +143,14 @@ class ComparePage(Toplevel):
         self.sort_box_button.grid(row=1, column=0)
 
         ##### ADDING VARIANTS TO VARIANTS LIST
-        for index, variant in enumerate(constants.sort_box_variants):
+        for index, variant in enumerate(constants.SORT_BOX_VARIANTS):
             index += 1
             self.sort_box_variants_list.insert(index, variant)
 
 
      ###############  BACK BUTTON   ###############
         self.back_button_img = PhotoImage(
-            file="Static/project_photos/back_button.png"
+            file="app/static/project_photos/back_button.png"
         )
         self.back_button = Button(
             master=self, bg='grey',
@@ -186,14 +187,14 @@ class ComparePage(Toplevel):
         self.first_name.place(x=10, y=30)
         self.first_name.insert(
             0,
-            utilities.compare_page_center_name_or_stat(
+            utilities.center_value(
                 obj='Force Khajiit', stat_or_name='name'
             )
         )
 
         ##### PHOTO
         self.first_photo = PhotoImage(
-            file='Static/project_photos/mage_khajiit.png'
+            file='app/static/project_photos/mage_khajiit.png'
         )
         self.first_photo_label = Label(
             master=self.left_frame, image=self.first_photo
@@ -218,14 +219,14 @@ class ComparePage(Toplevel):
         self.second_name.place(x=700, y=30)
         self.second_name.insert(
             0,
-            utilities.compare_page_center_name_or_stat(
+            utilities.center_value(
                 obj="Light Paladin", stat_or_name='name',
             )
         )
 
         ##### PHOTO
         self.second_photo = PhotoImage(
-            file='Static/project_photos/paladin.png'
+            file='app/static/project_photos/paladin.png'
         )
         self.second_photo_label = Label(
             master=self.left_frame, image=self.second_photo
@@ -251,7 +252,7 @@ class ComparePage(Toplevel):
 
     ###############  INFO LABELS  ###############
         y = 0
-        for text in constants.info_text_names:
+        for text in constants.INFO_TEXT_NAMES:
             setattr(
                 self, text,
                 Label(
@@ -264,9 +265,9 @@ class ComparePage(Toplevel):
 
 
     ###############  INFO ENTRIES  ###############
-        info_entry_names_x_values = iter(constants.info_entry_names_x_values)
-        info_entry_names_y_values = iter(constants.info_entry_names_y_values)
-        for entry_name in constants.info_entry_names:
+        info_entry_names_x_values = iter(constants.INFO_ENTRY_NAMES_X_VALUES)
+        info_entry_names_y_values = iter(constants.INFO_ENTRY_NAMES_Y_VALUES)
+        for entry_name in constants.INFO_ENTRY_NAMES:
             setattr(
                 self, entry_name,
                 Entry(
@@ -281,8 +282,8 @@ class ComparePage(Toplevel):
 
 
     ###############  STAT TITLE LABELS  ###############
-        stat_title_text_x_values = iter(constants.stat_title_text_x_values)
-        for text in constants.stat_title_text_names:
+        stat_title_text_x_values = iter(constants.STAT_TITLE_TEXT_X_VALUES)
+        for text in constants.STAT_TITLE_TEXT_NAMES:
             setattr(
                 self, text,
                 Label(
@@ -296,8 +297,8 @@ class ComparePage(Toplevel):
 
 
     ###############  STAT LABELS  ###############
-        stat_text_x_values = iter(constants.stat_text_x_values)
-        for label_name, label_text in constants.stat_text_names.items():
+        stat_text_x_values = iter(constants.STAT_TEXT_X_VALUES)
+        for label_name, label_text in constants.STAT_TEXT_NAMES.items():
             setattr(
                 self, label_name,
                 Label(
@@ -312,9 +313,9 @@ class ComparePage(Toplevel):
 
 
     ###############  STAT ENTRIES  ###############
-        stat_entry_names_x_values = iter(constants.stat_entry_names_x_values)
-        stat_entry_names_y_values = iter(constants.stat_entry_names_y_values)
-        for index, entry_name in enumerate(constants.stat_entry_names):
+        stat_entry_names_x_values = iter(constants.STAT_ENTRY_NAMES_X_VALUES)
+        stat_entry_names_y_values = iter(constants.STAT_ENTRY_NAMES_Y_VALUES)
+        for index, entry_name in enumerate(constants.STAT_ENTRY_NAMES):
             setattr(
                 self, entry_name,
                 Entry(
@@ -341,8 +342,8 @@ class ComparePage(Toplevel):
 
 
     ###############  BARS  ###############
-        bar_x_values = iter(constants.bar_x_values)
-        for index, bar_name in enumerate(constants.bar_list):
+        bar_x_values = iter(constants.BAR_X_VALUES)
+        for index, bar_name in enumerate(constants.BAR_LIST):
             setattr(
                 self, bar_name,
                 ttk.Progressbar(
@@ -380,15 +381,15 @@ class ComparePage(Toplevel):
         """Change Compare Page theme based on selected option."""
 
         text_list = [
-            *constants.info_text_names,
-            *constants.stat_title_text_names,
-            *constants.stat_text_names.keys(),
+            *constants.INFO_TEXT_NAMES,
+            *constants.STAT_TITLE_TEXT_NAMES,
+            *constants.STAT_TEXT_NAMES.keys(),
             'vs_label', 'themes_lbl'
         ]
-        entry_list = constants.info_entry_names
+        entry_list = constants.INFO_ENTRY_NAMES
         right_boxes = [self.database_box, self.sort_box, self.themes_lbl]
 
-        colors_dict = constants.compare_colors_dict(self.themes_list.get())
+        colors_dict = utilities.colors_dict(theme=self.themes_list.get(), file='COMPARE_PAGE')
 
         for text in text_list:
             getattr(self, text).configure(
@@ -491,32 +492,32 @@ class ComparePage(Toplevel):
         ### PHOTO, FLAG, TITLE
         if which == 'first':
             self.first_photo.configure(
-                file=f'Static/fighters_photos/{person_in_base}(photo).png')
+                file=f'app/static/fighters_photos/{person_in_base}(photo).png')
             self.first_flag.configure(
-                file=f'Static/fighters_photos/{person_in_base}(flag).png')
+                file=f'app/static/fighters_photos/{person_in_base}(flag).png')
 
             self.first_name.delete(0, END)
             self.first_name.insert(
-                index=0, string=utilities.compare_page_center_name_or_stat(
+                index=0, string=utilities.center_value(
                     obj=fighter_stats[0], stat_or_name='name')
             )
         elif which == 'second':
             self.second_photo.configure(
-                file=f'Static/fighters_photos/{person_in_base}(photo).png')
+                file=f'app/static/fighters_photos/{person_in_base}(photo).png')
             self.second_flag.configure(
-                file=f'Static/fighters_photos/{person_in_base}(flag).png')
+                file=f'app/static/fighters_photos/{person_in_base}(flag).png')
 
             self.second_name.delete(0, END)
             self.second_name.insert(
-                index=0, string=utilities.compare_page_center_name_or_stat(
+                index=0, string=utilities.center_value(
                     obj=fighter_stats[0], stat_or_name='name'))
 
 
         ### ENTRIES
-        entry_list = constants.first_fighter_entry_names_for_displaying if \
-            which == 'first' else constants.second_fighter_entry_names_for_displaying
+        entry_list = constants.FIRST_FIGHTER_ENTRY_NAMES_FOR_DISPLAYING if \
+            which == 'first' else constants.SECOND_FIGHTER_ENTRY_NAMES_FOR_DISPLAYING
 
-        entry_abbreviations = iter(constants.entry_abbreviations)
+        entry_abbreviations = iter(constants.ENTRY_ABBREVIATIONS)
         fighter_stats = list(fighter_stats)
         fighter_stats[3] = f"{fighter_stats[3]}KG / {fighter_stats[4]}CM"
         del fighter_stats[4]
@@ -527,15 +528,15 @@ class ComparePage(Toplevel):
             entry.delete(0, END)
 
             entry.insert(
-                    0, utilities.compare_page_center_name_or_stat(
+                    0, utilities.center_value(
                         obj=str(fighter_stats[index]) + next(entry_abbreviations),
                         stat_or_name='stat' if index > 7 else None,
                     )
                 )
 
         ### BARS
-        fighter_bar_list = [*constants.bar_list[6:12], *constants.bar_list[:6]] \
-            if which == 'first' else constants.bar_list[12:]
+        fighter_bar_list = [*constants.BAR_LIST[6:12], *constants.BAR_LIST[:6]] \
+            if which == 'first' else constants.BAR_LIST[12:]
         index = 9
         for control, bar_name in enumerate(fighter_bar_list):
             if control != 0 and control % 2 == 0:
@@ -553,7 +554,7 @@ class ComparePage(Toplevel):
                 self.sort_box_variants_list.curselection())
 
             # grab proper db command based on selected option
-            selected_db_command_condition = db_command_conditions_dict[
+            selected_db_command_condition = DB_COMMAND_CONDITIONS_DICT[
                 selected_option
             ]
 
@@ -615,12 +616,12 @@ class ComparePage(Toplevel):
         )
 
         ######### create and adjust graph
-        style_based_on_actual_theme = constants.compare_colors_dict(
-            self.themes_list.get())['graph']
+        style_based_on_actual_theme = utilities.colors_dict(
+            theme=self.themes_list.get(), file='COMPARE_PAGE')['graph']
         plt.style.use(style_based_on_actual_theme)
         plt.figure(figsize=(10, 5))
 
-        x_indexes = np.arange(len(constants.graph_x_values))
+        x_indexes = np.arange(len(constants.GRAPH_X_VALUES))
         bar_width = 0.3
 
         plt.bar(
@@ -639,7 +640,7 @@ class ComparePage(Toplevel):
             label=f"Warrior Fights Comparison",
             y=1.04, font='Arial', fontsize='20', fontweight='bold',
         )
-        plt.xticks(ticks=x_indexes, labels=constants.graph_x_values)
+        plt.xticks(ticks=x_indexes, labels=constants.GRAPH_X_VALUES)
         plt.xlabel("Fight Results", fontsize=15, labelpad=8)
         plt.ylabel("Amount Of Fights", fontsize=15, labelpad=10)
         plt.tick_params(labelsize=10)
